@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { ApolloServer, gql } = require("apollo-server");
 
 const typeDefs = gql`
@@ -18,6 +19,6 @@ const server = new ApolloServer({
   resolvers
 });
 
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+server.listen({ port: process.env.PORT }).then(() => {
+  console.log(`🚀 Server ready at ${process.env.PORT}`);
 });
