@@ -4,8 +4,8 @@
   "description": "Alex's GraphQL project",
   "main": "index.js",
   "scripts": {
-    "start-dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start-dev": "node src/app.js && nodemon src/index.js",
+    "start": "node src/app.js && node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,10 @@
   "dependencies": {
     "apollo-server": "^2.11.0",
     "dotenv": "^8.2.0",
-    "graphql": "^14.6.0"
+    "graphql": "^14.6.0",
+    "pg": "^7.18.2",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
