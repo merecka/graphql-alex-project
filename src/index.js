@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-//Configure and Initialize Apollo Server
 const { ApolloServer, gql } = require("apollo-server");
 
 const typeDefs = gql`
@@ -25,22 +24,13 @@ server.listen({ port: process.env.PORT }).then(() => {
   console.log(`🚀 Server ready at ${process.env.PORT}`);
 });
 
-// Connect Sequelize to Postgres database
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize("alexmerecka", "alexmerecka", "password", {
-  host: "localhost",
-  dialect: "postgres",
-  pool: {
-    max: 9,
-    min: 0,
-    idle: 10000
-  }
-});
+const sequelize = new Sequelize(process.env.DEV_DATABASE_URL);
 
 sequelize
   .authenticate()
   .then(() => {
-    console.log("Success!");
+    console.log("Successfully connected Sequelize to the database!");
   })
   .catch(err => {
     console.log(err);
