@@ -1,4 +1,5 @@
 require("dotenv").config();
+var models = require("../models");
 
 const { ApolloServer, gql } = require("apollo-server");
 
@@ -27,11 +28,13 @@ server.listen({ port: process.env.PORT }).then(() => {
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(process.env.DEV_DATABASE_URL);
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Successfully connected Sequelize to the database!");
-  })
-  .catch(err => {
-    console.log(err);
-  });
+models.sequelize.sync().then(() => {
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log("Successfully connected Sequelize to the database!");
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
