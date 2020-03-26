@@ -19,7 +19,7 @@ const typeDefs = gql`
 
   type Mutation {
     register(email: String!, password: String!): User!
-    login(email: String!, password: String!): User!
+    login(id: Int!, email: String!, password: String!): User!
   }
 `;
 
@@ -35,8 +35,9 @@ const resolvers = {
   },
 
   Mutation: {
-    async register(root, { email, password }, { models }) {
+    async register(root, { id, email, password }) {
       return models.User.create({
+        id,
         email,
         password
       });
