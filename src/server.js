@@ -19,7 +19,7 @@ const typeDefs = gql`
 
   type Mutation {
     register(email: String!, password: String!): User!
-    login(id: Int!, email: String!, password: String!): User!
+    login(email: String!, password: String!): User!
   }
 `;
 
@@ -41,6 +41,10 @@ const resolvers = {
         email,
         password
       });
+    },
+
+    async login(root, { email, password }) {
+      return models.User.findOne({ where: { email, password } });
     }
   }
 };
