@@ -44,14 +44,14 @@ const resolvers = {
     },
 
     async login(root, { email, password }) {
-      return models.User.findOne({ where: { email, password } }).then(user => {
-        console.log(user);
+      return models.User.findOne({ where: { email } }).then(user => {
         if (!user) {
           console.log("This user email address does not exist.");
         } else if (!user.validPassword(password)) {
           console.log("This entered password is incorrect.");
         } else {
-          console.log("Successfully logged in.");
+          console.log("Successfully logged in!");
+          return user;
         }
       });
     }
