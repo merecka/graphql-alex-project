@@ -5,8 +5,6 @@ const { ApolloServer, gql } = require("apollo-server");
 
 const typeDefs = gql`
   type Query {
-    "A simple type for getting started!"
-    hello: String
     allUsers: [User!]!
     user(id: Int!): User!
   }
@@ -18,14 +16,13 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    register(email: String!, password: String!): User!
-    login(email: String!, password: String!): User!
+    register(email: String!, password: String!): User
+    login(email: String, password: String): User
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => "world",
     async user(root, { id }) {
       return models.User.findByPk(id);
     },
@@ -40,19 +37,45 @@ const resolvers = {
         id,
         email,
         password
-      });
+      })
+        .then(user => {
+          if (user) {
+            return user;
+          }
+        })
+        .catch(error => {
+          console.log("Email address is already taken.");
+          return error, null;
+        });
     },
 
     async login(root, { email, password }) {
-      return models.User.findOne({ where: { email } }).then(user => {
-        if (!user) {
-          console.log("This user email address does not exist.");
-        } else if (!user.validPassword(password)) {
-          console.log("This entered password is incorrect.");
-        } else {
-          console.log("Successfully logged in!");
-          return user;
+      return models.User.findOne({
+        where: { email: email }
+      }).then(user => {
+        try {
+          if (!user) {
+            throw new Error("This user email address does not exist.");
+          } else {
+            user.validPassword(password).then(result => {
+              try {
+                if (!result) {
+                  throw new Error("This entered password is incorrect.");
+                } else {
+                  console.log("Successfully logged in!");
+                  return user;
+                }
+              } catch (error) {
+                console.log(error.message);
+                return error.message, null;
+              }
+            });
+          }
+        } catch (error) {
+          console.log(error.message);
+          return error.message, null;
         }
+        return user;
       });
     }
   }
